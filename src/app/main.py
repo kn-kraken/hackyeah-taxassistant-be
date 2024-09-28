@@ -22,8 +22,6 @@ async def chat_completions(
     ) -> ChatCompletionOkResponse | ChatCompletionErrorResponse:
     return ChatCompletionOkResponse(
         data=ChatCompletionOkResponseData(
-            content="Hello, World!",
-            user_id=request_payload.user_id,
-            conversation_id=request_payload.conversation_id
+            content="Hello, World!"
         )
     )

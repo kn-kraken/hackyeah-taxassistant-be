@@ -5,8 +5,6 @@ from pydantic import BaseModel
 class ChatCompletionOkResponseData(BaseModel):
     type: Literal["text"] = "text"
     content: str
-    user_id: str
-    conversation_id: str
 
 
 class ChatCompletionOkResponse(BaseModel):
