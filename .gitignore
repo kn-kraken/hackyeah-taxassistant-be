@@ -6,3 +6,7 @@ __pycache__/
 
 # Config files
 .env
+
+# Terraform
+.terraform/
+*.tfvars
