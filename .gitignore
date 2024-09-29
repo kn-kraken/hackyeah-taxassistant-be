@@ -10,3 +10,7 @@ __pycache__/
 # Terraform
 .terraform/
 *.tfvars
+
+# Project specific
+data/raw/
+data/temp/
