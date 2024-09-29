@@ -302,7 +302,7 @@
         "condition": "P62>0 OR P62=0"
       },
       {
-        "field_number": null,
+        "field_number": 99,
         "name": "POUCZENIA",
         "required": true,
         "type": "Całkowite",
