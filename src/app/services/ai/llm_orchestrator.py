@@ -1,12 +1,16 @@
 import logging
-from typing import Dict
+from typing import Dict, List
 
+from azure.core.credentials import AzureKeyCredential
+from azure.search.documents import SearchClient
+from openai import OpenAI
 from semantic_kernel import Kernel
 from semantic_kernel.contents import ChatHistory
 from semantic_kernel.functions import KernelArguments
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
 
+from app.services.ai.plugins import TaxDataPlugin
 from app.services.ai.prompts import SYSTEM_PROMPT_DEFAULT
 
 
@@ -15,6 +19,7 @@ class LLMOrchestrator:
         self, 
         chat_completion_service: OpenAIChatCompletion,
         chat_execution_settings: OpenAIChatPromptExecutionSettings,
+        plugins: List[TaxDataPlugin],
         system_prompt: str = SYSTEM_PROMPT_DEFAULT,
     ):
         self.kernel: Kernel = Kernel()
@@ -22,12 +27,21 @@ class LLMOrchestrator:
         self.chat_execution_settings = chat_execution_settings
         self.system_prompt = system_prompt
 
+        for plugin in plugins:
+            self.kernel.add_plugin(
+                plugin=plugin,
+                plugin_name=plugin.__class__.__name__,
+            )
+
         self.conversations: Dict[str, ChatHistory] = {}
+        logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         
 
     async def process_message(self, message: str, conversation_id: str):
+        self.logger.info(f"Processing message: {message}")
         if conversation_id not in self.conversations:
+            self.logger.info(f"Creating new conversation: {conversation_id}")
             chat_history = ChatHistory()
             chat_history.add_system_message(self.system_prompt)
         else:
@@ -42,6 +56,7 @@ class LLMOrchestrator:
             arguments=KernelArguments(),
         ))[0]
         response_text = str(response)
+        self.logger.info(f"Response: {response_text}")
         chat_history.add_assistant_message_str(response_text)
         
         self.conversations[conversation_id] = chat_history
@@ -54,6 +69,9 @@ class LLMOrchestrator:
         cls,
         api_key: str,
         model_name: str,
+        azure_search_key: str,
+        azure_search_endpoint: str,
+        azure_search_index_name: str,
     ) -> "LLMOrchestrator":
         completion_service_id = "chat-completion"
         openai_chat_completion_service = OpenAIChatCompletion(
@@ -64,11 +82,23 @@ class LLMOrchestrator:
         execution_settings = OpenAIChatPromptExecutionSettings(
             service_id=completion_service_id,
             temperature=0.2,
-            # tool_choice="auto",
+            tool_choice="auto",
         )
-        # execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
+        execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
+
+        credentials = AzureKeyCredential(azure_search_key)
+        search_client = SearchClient(
+            endpoint=azure_search_endpoint, 
+            index_name=azure_search_index_name, 
+            credential=credentials
+        )
+        openai_client = OpenAI(api_key=api_key)
+        tax_data_plugin = TaxDataPlugin(search_client, openai_client)
+        plugins = [tax_data_plugin]
 
         return cls(
             chat_completion_service=openai_chat_completion_service,
             chat_execution_settings=execution_settings,
+            plugins=plugins,
         )
+    

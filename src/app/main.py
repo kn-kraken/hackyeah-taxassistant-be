@@ -15,6 +15,9 @@ config = Config()
 orchestrator = LLMOrchestrator.OpenAI(
     api_key=config.OPENAI_API_KEY,
     model_name=config.OPENAI_MODEL_NAME,
+    azure_search_endpoint=config.AZURE_SEARCH_ENDPOINT,
+    azure_search_key=config.AZURE_SEARCH_KEY,
+    azure_search_index_name=config.AZURE_SEARCH_INDEX_NAME
 )
 
 
