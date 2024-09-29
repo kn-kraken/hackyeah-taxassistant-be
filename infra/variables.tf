@@ -29,3 +29,7 @@ variable "azure_search_endpoint" {
 variable "azure_search_key" {
   type = string
 }
+
+variable "api_url" {
+  type = string
+}

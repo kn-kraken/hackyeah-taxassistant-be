@@ -5,7 +5,7 @@ resource "google_artifact_registry_repository" "tax_assistant_docker_repository"
   format        = "DOCKER"
 }
 
-data "google_artifact_registry_docker_image" "tax_assistant_docker_image" {
+data "google_artifact_registry_docker_image" "tax_assistant_be_docker_image" {
   image_name    = "taxassistant-be"
   location      = google_artifact_registry_repository.tax_assistant_docker_repository.location
   repository_id = google_artifact_registry_repository.tax_assistant_docker_repository.repository_id
@@ -19,7 +19,7 @@ resource "google_cloud_run_v2_service" "tax_assistant_be_service" {
 
   template {
     containers {
-      image = data.google_artifact_registry_docker_image.tax_assistant_docker_image.self_link
+      image = data.google_artifact_registry_docker_image.tax_assistant_be_docker_image.self_link
       ports {
         container_port = 8000
       }
@@ -50,6 +50,41 @@ resource "google_cloud_run_v2_service" "tax_assistant_be_service" {
 resource "google_cloud_run_service_iam_binding" "tax_assistant_be_service_invoker" {
   location = google_cloud_run_v2_service.tax_assistant_be_service.location
   service  = google_cloud_run_v2_service.tax_assistant_be_service.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
+}
+
+data "google_artifact_registry_docker_image" "tax_assistant_mock_fe_docker_image" {
+  image_name    = "taxassistant-mock-fe"
+  location      = google_artifact_registry_repository.tax_assistant_docker_repository.location
+  repository_id = google_artifact_registry_repository.tax_assistant_docker_repository.repository_id
+}
+
+resource "google_cloud_run_v2_service" "tax_assistant_mock_fe_service" {
+  name     = "tax-assistant-mock-fe-service"
+  location = var.google_region
+  deletion_protection = false
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = data.google_artifact_registry_docker_image.tax_assistant_mock_fe_docker_image.self_link
+      ports {
+        container_port = 8501
+      }
+      env {
+        name = "API_URL"
+        value = var.api_url
+      }
+    }
+  }
+}
+
+resource "google_cloud_run_service_iam_binding" "tax_assistant_mock_fe_service_invoker" {
+  location = google_cloud_run_v2_service.tax_assistant_mock_fe_service.location
+  service  = google_cloud_run_v2_service.tax_assistant_mock_fe_service.name
   role     = "roles/run.invoker"
   members = [
     "allUsers"
