@@ -1,0 +1,314 @@
+{
+    "fields": [
+      {
+        "field_number": 1,
+        "name": "IDENTYFIKATOR PODATKOWY",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Identyfikator podatkowy jest numerem pesel bądź numerem NIP",
+        "rule": "Pesel musi się składać z 11 cyfr, a numer NIP z 10 cyfr",
+        "condition": "określone w logice"
+      },
+      {
+        "field_number": 4,
+        "name": "DATA DOKONANIA CZYNNOŚCI",
+        "required": true,
+        "type": "Data",
+        "description": "Data dokonania czynności nie może być wcześniejsza niż 01.01.2024 r. i nie może być późniejsza niż data złożenia deklaracji",
+        "rule": "data dokonania czynności jest większa lub równa 01.01.2024 r. i jest mniejsza lub równa dacie złożenia deklaracji",
+        "condition": "P4>=01.01.2024 AND P4<=date of declaration"
+      },
+      {
+        "field_number": 6,
+        "name": "CEL ZŁOŻENIA DEKLARACJI",
+        "required": true,
+        "type": "Całkowite",
+        "description": "Cel złożenia deklaracji musi przyjmować wartość: 1 (złożenie deklaracji)",
+        "rule": "cel złożenia deklaracji jest równy: 1 (złożenie deklaracji)",
+        "condition": "P6=1"
+      },
+      {
+        "field_number": 7,
+        "name": "PODMIOT SKŁADAJĄCY DEKLARACJĘ",
+        "required": true,
+        "type": "Całkowite",
+        "description": "Podmiot składający deklarację musi przyjmować wartość: 1 (podmiot zobowiązany solidarnie do zapłaty podatku) lub 5 (inny podmiot)",
+        "rule": "podmiot składający deklarację jest równy: 1 (podmiot zobowiązany solidarnie do zapłaty podatku) lub 5 (inny podmiot)",
+        "condition": "P7=1 OR P7=5"
+      },
+      {
+        "field_number": 8,
+        "name": "RODZAJ PODATNIKA",
+        "required": true,
+        "type": "Całkowite",
+        "description": "rodzaj podatnika musi przyjmować wartość: 1 (podatnik niebędący osobą fizyczną) lub 2 (osoba fizyczna)",
+        "rule": "rodzaj podatnika jest równy: 1 (podmiotpodmiot prawny, który nie jest indywidualną osobą, ale ma zdolność prawną do zawierania umów, posiadania praw i obowiązków) lub 2 (Osoba fizyczna )",
+        "condition": "P8=1 OR P8=5"
+      },
+      {
+        "field_number": 9,
+        "name": "NAZWA PEŁNA/NAZWISKO, PIERWSZE IMIĘ, DATA URODZENIA",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Nazwa pełna podmiotu, jeśli podatnik nie jest osobą fizyczną albo nazwisko, pierwsze imię i data urodzenia, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera pełną nazwę podmiotu. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera nazwisko, pierwsze imię i datę urodzenia",
+        "condition": "IF P8 == 1: P9 = (nazwa_pełna_podmiotu); IF P8 == 2: P9 = (nazwisko, pierwsze_imię, data_urodzenia)"
+      },
+      {
+        "field_number": 10,
+        "name": "NAZWA SKRÓCONA/IMIĘ OJCA, IMIĘ MATKI",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Nazwa skróconą podmiotu, jeśli podatnik nie jest osobą fizyczną albo imię ojca i imię matki, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera skróconą nazwę podmiotu. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera imię ojca i imię matki",
+        "condition": "IF P8 == 1: P10 = (nazwa_skrócona_podmiotu); IF P8 == 2: P10 = (imię_ojca, imię_matki)"
+      },
+      {
+        "field_number": 11,
+        "name": "KRAJ",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Kraj w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo kraj aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera kraj, w którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera kraj aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P11 = (kraj_siedziby); IF P8 == 2: P11 = (kraj_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 12,
+        "name": "WOJEWÓDZTWO",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Województwo w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo województwo aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera województwo, w którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera województwo aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P12 = (województwo_siedziby); IF P8 == 2: P12 = (województwo_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 13,
+        "name": "POWIAT",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Powiat w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo powiat aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera powiat, w którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera powiat aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P13 = (powiat_siedziby); IF P8 == 2: P13 = (powiat_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 14,
+        "name": "GMINA",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Gmina w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo gmina aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera gminę, w którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera gminę aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P14 = (gmina_siedziby); IF P8 == 2: P14 = (gmina_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 15,
+        "name": "ULICA",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Ulica w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo ulica aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera ulicę, na której jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera ulicę aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P15 = (ulica_siedziby); IF P8 == 2: P15 = (ulica_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 16,
+        "name": "NUMER DOMU",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Numer domu w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo numer domu aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera numer domu, w którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera numer domu aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P16 = (numer_domu_siedziby); IF P8 == 2: P16 = (numer_domu_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 17,
+        "name": "NUMER LOKALU",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Numer lokalu w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo numer lokalu aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera numer lokalu, w którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera numer lokalu aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P17 = (numer_lokalu_siedziby); IF P8 == 2: P17 = (numer_lokalu_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 18,
+        "name": "MIEJSCOWOŚĆ",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Miejscowość w której jest siedziba, jeśli podatnik nie jest osobą fizyczną albo miejscowość aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera miejscowość, w której jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera miejscowość aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P18 = (miejscowość_siedziby); IF P8 == 2: P18 = (miejscowość_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 19,
+        "name": "KOD POCZTOWY",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Kod pocztowy adresu w którym jest siedziba, jeśli podatnik nie jest osobą fizyczną albo kod pocztowy aktualnego zamieszkania, jeśli podatnik jest osobą fizyczną",
+        "rule": "Jeśli RODZAJ PODATNIKA to podatnik niebędący osobą fizyczną to pole zawiera kod pocztowy, adresu pod którym jest siedziba. Jeśli RODZAJ PODATNIKA osoba fizyczna to pole zawiera kod pocztowy aktualnego zamieszkania",
+        "condition": "IF P8 == 1: P19 = (kod_pocztowy_siedziby); IF P8 == 2: P19 = (kod_pocztowy_aktualnego_zamieszkania)"
+      },
+      {
+        "field_number": 20,
+        "name": "PRZEDMIOT OPODATKOWANIA",
+        "required": true,
+        "type": "Całkowite",
+        "description": "Przedmiot opodatkowania musi przyjmować wartość: 1 (umowa)",
+        "rule": "przedmiot opodatkowania jest równy: 1 (umowa)",
+        "condition": "P20=1"
+      },
+      {
+        "field_number": 21,
+        "name": "MIEJSCE POŁOŻENIA RZECZY LUB WYKONYWANIA PRAWA MAJĄTKOWEGO",
+        "required": false,
+        "type": "Całkowite",
+        "description": "Miejsce położenia rzeczy lub miejsce wykonywania prawa majątkowego musi przyjmować wartość: 0 (jest niewypełnione), 1 (terytorium RP) lub 2 (poza terytorium RP)",
+        "rule": "miejsce położenia rzeczy lub wykonywania prawa majątkowego jest równe: 0 (jest niewypełnione w przypadku obliczenia podatku od umowy spółki / zmiany umowy) lub 1 (terytorium RP) lub 2 (poza terytorium RP)",
+        "condition": "P21=0 OR P21=1 OR P21=2"
+      },
+      {
+        "field_number": 22,
+        "name": "MIEJSCE DOKONANIA CZYNNOŚCI CYWILNOPRAWNEJ",
+        "required": false,
+        "type": "Całkowite",
+        "description": "Miejsce dokonania czynności cywilnoprawnej musi przyjmować wartość: 0 (jest niewypełnione), 1 (terytorium RP) lub 2 (poza terytorium RP)",
+        "rule": "miejsce dokonania czynności cywilnoprawnej jest równe: 0 (jest niewypełnione) lub 1 (terytorium RP) lub 2 (poza terytorium RP)",
+        "condition": "P22=0 OR P22=1 OR P22=2"
+      },
+      {
+        "field_number": 23,
+        "name": "ZWIĘZŁE OKREŚLENIE TREŚCI I PRZEDMIOTU CZYNNOŚCI CYWILNOPRAWNEJ",
+        "required": true,
+        "type": "Tekstowe",
+        "description": "Należy podać markę, model samochodu, rok produkcji i inne istotne informacje o stanie technicznym"
+      },
+      {
+        "field_number": 231,
+        "name": "RODZAJ CZYNNOŚCI CYWILNOPRAWNEJ",
+        "required": true,
+        "type": "Lista tekstowa",
+        "description": "Rodzaj czynności cywilnoprawnej, wybierany z listy możliwych wartości, określający stawkę podatku",
+        "condition": "P231 from (umowa sprzedaży, umowa zamiany, umowa pożyczki lub depozytu nieprawidłowego, w tym zwolniona na podstawie art. 9 pkt 10 lit.b ustawy, umowa darowizny w części dotyczącej przejęcia przez obdarowanego długów i ciężarów lub zobowiązań darczyńcy, ustanowienie odpłatnego użytkowania, w tym nieprawidłowego, ustanowienie hipoteki na zabezpieczenie wierzytelności istniejących, ustanowienie hipoteki na zabezpieczenie wierzytelności o wysokości nieustalonej, inna czynność)"
+      },
+      {
+        "field_number": 24,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY SPRZEDAŻY - STAWKA PODATKU 1%",
+        "required": false,
+        "type": "PLN",
+        "description": "Podstawa opodatkowania dla umowy sprzedaży musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych. Stawka podatku 1% określona dla umowy sprzedaży, gdzie podstawa opodatkowania określona zgodnie z art. 6 ustawy",
+        "rule": "Podstawa opodatkowania dla umowy sprzedaży przy stawce 1%. Musi być lub równa 1000 PLN, zaokrąglona do pełnych złotych. Stawka podatku obowiązuje, gdy wystąpiła sprzedaż innych praw majątkokwych niż sprzedaż: nieruchomości, rzeczy ruchomych, prawa użytkowania wieczystego, własnościowego spółdzielczego prawa do lokalu mieszkalnego, spółdzielczego prawa do lokalu użytkowego oraz wynikających z przepisów prawa spółdzielczego: prawa do domu jednorodzinnego oraz prawa do lokalu w małym domu mieszkalnym",
+        "condition": "IF P231 == umowa sprzedaży AND rule satisfied AND P26>=1000: P26 = ROUND(P26, 0) ELSE P26 = 0"
+      },
+      {
+        "field_number": 25,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY SPRZEDAŻY - STAWKA PODATKU 1%",
+        "required": false,
+        "type": "PLN",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży musi być równy iloczynowi podstawy opodatkowania i stawki podatku, zaokrąglonemu do pełnych złotych",
+        "rule": "IF P231 == umowa sprzedaży AND P24 not Null: ROUND(P25*1%, 0)"
+      },
+      {
+        "field_number": 26,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY SPRZEDAŻY - STAWKA PODATKU 2%",
+        "required": false,
+        "type": "PLN",
+        "description": "Podstawa opodatkowania dla umowy sprzedaży musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych. Stawka podatku 2% określona dla umowy sprzedaży, gdzie podstawa opodatkowania określona zgodnie z art. 6 ustawy",
+        "rule": "Podstawa opodatkowania dla umowy sprzedaży przy stawce 2%. Musi być lub równa 1000 PLN, zaokrąglona do pełnych złotych. Stawka podatku obowiązuje, gdy wystąpiła sprzedaż praw majątkokwych takich jak sprzedaż: nieruchomości, rzeczy ruchomych, prawa użytkowania wieczystego, własnościowego spółdzielczego prawa do lokalu mieszkalnego, spółdzielczego prawa do lokalu użytkowego oraz wynikających z przepisów prawa spółdzielczego: prawa do domu jednorodzinnego oraz prawa do lokalu w małym domu mieszkalnym",
+        "condition": "IF P231 == umowa sprzedaży AND rule satisfied AND P26>=1000: P26 = ROUND(P26, 0) ELSE P26 = 0"
+      },
+      {
+        "field_number": 27,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY SPRZEDAŻY - STAWKA PODATKU 2%",
+        "required": true,
+        "type": "PLN",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy sprzedaży musi być równy iloczynowi podstawy opodatkowania i stawki podatku, zaokrąglonemu do pełnych złotych",
+        "rule": "należny podatek = podstawa opodatkowania razy stawka podatku, zaokrąglona do pełnych złotych",
+        "calculation": "IF P231 == umowa sprzedaży AND P26 not Null: ROUND(P26*2%, 0)"
+      },
+      {
+        "field_number": 28,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY ZAMIANY",
+        "required": false,
+        "type": "PLN",
+        "description": "Podstawa opodatkowania dla umowy zamiany. Musi być większa lub równa 1000 PLN oraz podana po zaokrągleniu do pełnych złotych. Stawka podatku 2% określona dla umowy sprzedaży, gdzie podstawa opodatkowania określona zgodnie z art. 6 ustawy",
+        "rule": "Podstawa opodatkowania dla umowy sprzedaży. Musi być większa lub równa 1000 PLN, zaokrąglona do pełnych złotych. Stawka podatku obowiązuje, gdy wystąpiła sprzedaż praw majątkokwych takich jak sprzedaż: nieruchomości, rzeczy ruchomych, prawa użytkowania wieczystego, własnościowego spółdzielczego prawa do lokalu mieszkalnego, spółdzielczego prawa do lokalu użytkowego oraz wynikających z przepisów prawa spółdzielczego: prawa do domu jednorodzinnego oraz prawa do lokalu w małym domu mieszkalnym",
+        "condition": "IF P231 == umowa sprzedaży AND rule satisfied AND P26>=1000: P26 = ROUND(P26, 0) ELSE P26 = 0"
+      },
+      {
+        "field_number": 29,
+        "name": "STAWKA PODATKU DLA UMOWY ZAMIANY",
+        "required": false,
+        "type": "%",
+        "description": "",
+        "rule": "Stawka wynosi 2% przy przeniesioeniu własności nieruchomości, rzeczy ruchomych, prawa użytkowania wieczystego, własnościowego spółdzielczego prawa do lokalu mieszkalnego, spółdzielczego prawa do lokalu użytkowego oraz wynikających z przepisów prawa spółdzielczego: prawa do domu jednorodzinnego oraz prawa do lokalu w małym domu mieszkalnym. Stawka wynosi 1% przy przeniesieniu własności innych praw majątkowych",
+        "condition": "IF P231 == umowa zamiany: P29 = 1% OR P29 = 2%"
+      },
+      {
+        "field_number": 30,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY ZAMIANY",
+        "required": false,
+        "type": "PLN",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy zamiany musi być równy iloczynowi podstawy opodatkowania i stawki podatku, zaokrąglonemu do pełnych złotych",
+        "rule": "należny podatek = podstawa opodatkowania razy stawka podatku, zaokrąglona do pełnych złotych",
+        "calculation": "IF P231 == umowa zamiany AND P28 not Null: ROUND(P28*P29, 0)"
+      },
+      {
+        "field_number": 31,
+        "name": "PODSTAWA OPODATKOWANIA DLA UMOWY POŻYCZKI LUB DEPOZYTU NIEPRAWIDŁOWEGO",
+        "required": false,
+        "type": "PLN",
+        "description": "Podstawa opodatkowania dla pożyczki lub depozytu nieprawidłowego . Kwota lub wartość pożyczki albo depozytu, a w przypadku umowy określającej, że wypłata środków pieniężnych nastąpi niejednokrotnie i ich suma nie jest znana w chwili zawarcia umowy - kwota każdorazowej wypłaty środków pieniężnych",
+        "rule": "należny podatek = podstawa opodatkowania razy stawka podatku, zaokrąglona do pełnych złotych",
+        "calculation": "IF P231 == umowa pożyczki lub depozytu nieprawidłowego AND rule satisfied AND P31>=1000: P31 = ROUND(P31, 0) ELSE P31 = 0"
+      },
+      {
+        "field_number": 32,
+        "required": false,
+        "type": "%",
+        "description": "",
+        "rule": "Stawka wynosi 0.5%, chyba, że zwolnione zgodnie z art. 9 pkt 10 lit. b ustawy, po zaokrągleniu do pełnych złotych",
+        "condition": "P32 == 0.5% OR P32 == 0%"
+      },
+      {
+        "field_number": 33,
+        "name": "OBLICZONY NALEŻNY PODATEK OD UMOWY POŻYCZKI",
+        "required": false,
+        "type": "PLN",
+        "description": "Obliczony należny podatek od czynności cywilnoprawnej dla umowy zamiany musi być równy iloczynowi podstawy opodatkowania i stawki podatku, zaokrąglonemu do pełnych złotych",
+        "rule": "należny podatek = podstawa opodatkowania razy stawka podatku, zaokrąglona do pełnych złotych",
+        "calculation": "IF P231 == umowa zamiany AND P32 not Null: ROUND(P32*P31, 0)"
+      },
+      {
+        "field_number": 46,
+        "name": "KWOTA NALEŻNEGO PODATKU",
+        "required": true,
+        "type": "PLN",
+        "description": "Kwota należnego podatku od czynności cywilnoprawnych musi być równa obliczonemu należnemu podatkowi",
+        "rule": "kwota należnego podatku = obliczony należny podatek",
+        "condition": "P46=P27"
+      },
+      {
+        "field_number": 53,
+        "name": "KWOTA PODATKU DO ZAPŁATY",
+        "required": true,
+        "type": "PLN",
+        "description": "Kwota podatku do zapłaty musi być równa kwocie obliczonego podatku należnego po zaokrągleniu do pełnych złotych",
+        "rule": "kwota podatku do zapłaty = obliczony podatek należny, zaokrąglony do pełnych złotych",
+        "calculation": "ROUND(P46, 0)"
+      },
+      {
+        "field_number": 62,
+        "name": "LICZBA DOŁĄCZONYCH ZAŁĄCZNIKÓW PCC-3/A",
+        "required": false,
+        "type": "Całkowite",
+        "description": "W przypadku gdy podmiotem składającym deklarację jest podmiot zobowiązany solidarnie do zapłaty podatku, to liczba dołączonych załączników PCC-3/A musi być większa od zera. W przeciwnym razie liczba dołączonych załączników PCC-3/A jest równa zero.",
+        "rule": "jeśli podmiotem składającym deklarację jest podmiot zobowiązany solidarnie do zapłaty podatku P7=1, TO liczba dołączonych załączników PCC-3/A jest większa od zera P62>0, w przeciwnym razie P62=0",
+        "condition": "P62>0 OR P62=0"
+      },
+      {
+        "field_number": null,
+        "name": "POUCZENIA",
+        "required": true,
+        "type": "Całkowite",
+        "description": "POUCZENIA musi przyjmować wartość: 1 (Potwierdzam i akceptuję pouczenia)",
+        "rule": "POUCZENIA jest równe: 1 (Potwierdzam i akceptuję pouczenia)",
+        "condition": "Pouczenia=1"
+      }
+    ]
+  }
