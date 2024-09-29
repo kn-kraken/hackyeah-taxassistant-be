@@ -1,16 +1,16 @@
 import logging
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
-from openai import OpenAI
+from openai import AsyncOpenAI, OpenAI
 from semantic_kernel import Kernel
 from semantic_kernel.contents import ChatHistory
 from semantic_kernel.functions import KernelArguments
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
 
-from app.services.ai.plugins import TaxDataPlugin
+from app.services.ai.plugins import DeclarationFormPlugin, TaxDataPlugin
 from app.services.ai.prompts import SYSTEM_PROMPT_DEFAULT
 
 
@@ -19,7 +19,7 @@ class LLMOrchestrator:
         self, 
         chat_completion_service: OpenAIChatCompletion,
         chat_execution_settings: OpenAIChatPromptExecutionSettings,
-        plugins: List[TaxDataPlugin],
+        plugins: List[Union[DeclarationFormPlugin, TaxDataPlugin]],
         system_prompt: str = SYSTEM_PROMPT_DEFAULT,
     ):
         self.kernel: Kernel = Kernel()
@@ -94,7 +94,10 @@ class LLMOrchestrator:
         )
         openai_client = OpenAI(api_key=api_key)
         tax_data_plugin = TaxDataPlugin(search_client, openai_client)
-        plugins = [tax_data_plugin]
+
+        async_openai_client = AsyncOpenAI(api_key=api_key)    
+        declaration_form_plugin = DeclarationFormPlugin(async_openai_client, model_name)
+        plugins = [tax_data_plugin, declaration_form_plugin]
 
         return cls(
             chat_completion_service=openai_chat_completion_service,

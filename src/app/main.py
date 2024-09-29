@@ -1,5 +1,8 @@
+from datetime import datetime
+import pytz
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import Config
 from app.schemas.requests import ChatCompletionRequest
@@ -20,6 +23,15 @@ orchestrator = LLMOrchestrator.OpenAI(
     azure_search_index_name=config.AZURE_SEARCH_INDEX_NAME
 )
 
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 async def root():
@@ -38,6 +50,8 @@ async def chat_completions(
 
     return ChatCompletionOkResponse(
         data=ChatCompletionOkResponseData(
-            content=response
+            content=response,
+            author="bot",
+            timestamp=datetime.now(pytz.utc).isoformat()
         )
     )

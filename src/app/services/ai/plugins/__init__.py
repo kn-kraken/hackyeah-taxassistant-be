@@ -1,1 +1,2 @@
+from .declaration_form_plugin import DeclarationFormPlugin
 from .tax_data_plugin import TaxDataPlugin

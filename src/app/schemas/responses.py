@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 from pydantic import BaseModel
 
@@ -5,6 +6,8 @@ from pydantic import BaseModel
 class ChatCompletionOkResponseData(BaseModel):
     type: Literal["text"] = "text"
     content: str
+    author: str
+    timestamp: datetime
 
 
 class ChatCompletionOkResponse(BaseModel):

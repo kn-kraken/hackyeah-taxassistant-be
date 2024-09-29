@@ -1,1 +1,1 @@
-from .prompts import SYSTEM_PROMPT_DEFAULT
+from .prompts import SYSTEM_PROMPT_DEFAULT, EXTRACT_FORM_FIELD_PROMPT
