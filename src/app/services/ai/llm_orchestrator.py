@@ -38,7 +38,7 @@ class LLMOrchestrator:
         self.logger = logging.getLogger(__name__)
         
 
-    async def process_message(self, message: str, conversation_id: str):
+    async def process_message(self, message: str, conversation_id: str) -> str:
         self.logger.info(f"Processing message: {message}")
         if conversation_id not in self.conversations:
             self.logger.info(f"Creating new conversation: {conversation_id}")

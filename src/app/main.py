@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 import pytz
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
@@ -38,7 +39,7 @@ async def root():
     return RedirectResponse(url="/docs")
 
 
-@app.post("/chat/completions")
+@app.post("/chat/completions", response_model=Union[ChatCompletionOkResponse, ChatCompletionErrorResponse])
 async def chat_completions(
     request_payload: ChatCompletionRequest    
     ) -> ChatCompletionOkResponse | ChatCompletionErrorResponse:
