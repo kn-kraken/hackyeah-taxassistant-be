@@ -10,7 +10,7 @@ API_URL = os.getenv("API_URL")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-st.sidebar.title("Chat Settings")
+st.sidebar.title("Ustawienia użytkownika")
 user_id = st.sidebar.text_input("User ID", value="user_123")
 conversation_id = st.sidebar.text_input("Conversation ID", value="conv_123")
 
@@ -30,17 +30,17 @@ def send_message(user_message, user_id, conversation_id):
 st.title("TaxAssistant by Kraken™")
 
 for chat in st.session_state.messages:
-    if chat["user"] == "You":
-        st.markdown(f"**You**: {chat['message']}")
+    if chat["user"] == "User":
+        st.markdown(f"**Ty**: {chat['message']}")
     else:
-        st.markdown(f"**Assistant**: {chat['message']}")
+        st.markdown(f"**Asystent**: {chat['message']}")
 
 st.markdown("---")
-user_message = st.text_input("Type your message here")
+user_message = st.text_input("Napisz wiadomość...")
 
-if st.button("Send"):
+if st.button("Wyślij"):
     if user_message:
-        st.session_state.messages.append({"user": "You", "message": user_message})
+        st.session_state.messages.append({"user": "User", "message": user_message})
 
         bot_reply = send_message(user_message, user_id, conversation_id)
         st.session_state.messages.append({"user": "Bot", "message": bot_reply})
@@ -48,4 +48,4 @@ if st.button("Send"):
         st.rerun()
 
 st.sidebar.markdown("---")
-st.sidebar.write("TaxAssistant help you with your tax related questions.")
+st.sidebar.write("TaxAssistant pomoże Ci zrozumieć podstawowe zagadnienia związane z podatkami oraz wypełnić deklaracje podatkowe.")
